@@ -1,27 +1,25 @@
 
-
-
-% tâches.
 % task(ID, Description, Assigné, StatutDeCompletion).
+
 :- dynamic task/4.
 
-% 1. Définir un prédicat pour créer une tâche avec le statut initial de completion à faux.
+% créer une tâche avec le statut par defaut false.
 create_task(ID, Description, Assigne) :-
     assertz(task(ID, Description, Assigne, false)),
     format('Task created: ~w.~n', [ID]).
 
-% 2. Prédicat pour assigner une tâche à un utilisateur.
+%  reliee une tâche à un utilisateur
 assign_task(ID, NouvelAssigne) :-
     retractall(task(ID, Description, _, Statut)), % Retire l’assigné actuel
     assertz(task(ID, Description, NouvelAssigne, Statut)), % Assigne le nouvel utilisateur
     format('Task ~w assigned to user : ~w.~n', [ID, NouvelAssigne]).
 
-% 3. Prédicat pour marquer une tâche comme terminée.
+%  marquer une tâche comme terminée.
 mark_completed(ID) :-
     retractall(task(ID, Description, Assigne, _)), % Retire le statut actuel
     assertz(task(ID, Description, Assigne, true)),% Met à jour le statut en vrai
     format('Task ~w marked as completed.~n', [ID]).
-% 4. Prédicat pour afficher toutes les tâches.
+%  afficher toutes les tâches.
 display_tasks :-
     forall(task(ID, Description, Assigne, Statut),
         (format('Tâche ~w :~n', [ID]),
@@ -29,7 +27,7 @@ display_tasks :-
             format('- Assigné : ~w~n', [Assigne]),
             format('- Statut de complétion : ~w~n~n', [Statut]))).
 
-% 5. Prédicat pour afficher les tâches assignées à un utilisateur spécifique.
+% les tâches d' un utilisateur spécifique
 display_tasks_assigned_to(Utilisateur) :-
     format('Tâches assignées à ~w :~n', [Utilisateur]),
     forall(task(ID, Description, Utilisateur, Statut),
@@ -37,7 +35,7 @@ display_tasks_assigned_to(Utilisateur) :-
             format('- Description : ~w~n', [Description]),
             format('- Statut de complétion : ~w~n~n', [Statut]))).
 
-% 6. Prédicat pour afficher les tâches terminées.
+% les tâches terminées
 display_completed_tasks :-
     write('Tâches terminées :~n'),
     forall(task(ID, Description, Assigne, true),
